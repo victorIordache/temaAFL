@@ -5,20 +5,22 @@ import java.util.Scanner;
 
 public class AFL {
 	static int q0 = 0, q1;
-	static int q2;
+	static boolean raspunsFinal = false;
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Esti in faza " + q0);
 		String verify = "";
 		String cuvant = verifyAlphabet(verify);
 		if (q1 == 1) {
-			System.out.println("Esti in faza" + " " + q1);
-			verifyOmega(cuvant);
+			for (int i = 0; i <= cuvant.length() - 1; i++) {
+				transition(q0, cuvant.charAt(i));
+			}
 		}
+		apartine(raspunsFinal);
 	}
 
 	public static String verifyAlphabet(String cuvant) {
-		boolean corect = true;   // Variabila creata cu scopul de a afisa o singura data String-ul eroare/aprobat
+		boolean corect = true; // Variabila creata cu scopul de a afisa o singura data String-ul eroare/aprobat
 		String aprobat = "Cuvantul dat apartine alfabetului dat.";
 		String eroare = "Cuvantul dat nu apartine alfabetului dat.";
 		Scanner input = new Scanner(System.in);
@@ -27,7 +29,7 @@ public class AFL {
 		input.close();
 		for (int i = 0; i <= cuvant.length() - 1; i++) {
 			char verifyString = cuvant.charAt(i);
-			if (verifyString >= 'a' && verifyString <= 'b') {  // daca cuvantul contine doar a sau b corect ramane true
+			if (verifyString >= 'a' && verifyString <= 'b') { // daca cuvantul contine doar a sau b corect ramane true
 				corect = true;
 			} else {
 				corect = false;
@@ -44,21 +46,40 @@ public class AFL {
 		return cuvant;
 	}
 
-	public static void verifyOmega(String cuvant) {
-		boolean limbaj = false;  // Variabila creata cu scopul de a afisa o singura data String-urile de la final
-		for (int i = 1; i <= cuvant.length() - 4; i++) { // citirea o fac doar in interior, evit prima si ultima litera a.i. cuvintele de tipul aab,aba etc.. sa nu fie admisibile
-			if (cuvant.charAt(i) == 'a' && cuvant.charAt(i + 1) == 'a' && cuvant.charAt(i + 2) == 'b') {
-				limbaj = true;
-				q2 = q0 + 2;
-				break;
-			}
+	public static void transition(int stare, char l) { // functia de tranzitie
+		if (stare == 0 && l == 'a') {
+			q0 = 1;
+			System.out.println("Esti in starea " + q0);
 		}
-		if (limbaj == true) {
-			System.out.println("Cuvantul dat apartine limbajului dat");
-			System.out.println("Esti in faza" + " " + q2 + " adica finala");
-		} else {
-			System.out.println("Cuvantul dat nu apartine limbajului dat");
-			System.out.println("Ai ramas la faza " + q1);
+		if (stare == 0 && l == 'b') {
+			q0 = 0;
+			System.out.println("Esti in starea " + q0);
+		}
+		if (stare == 1 && l == 'a') {
+			q0 = 2;
+			System.out.println("Esti in starea " + q0);
+		}
+		if (stare == 1 && l == 'b') {
+			q0 = 0;
+			System.out.println("Esti in starea " + q0);
+		}
+		if (stare == 2 && l == 'a') {
+			q0 = 2;
+			System.out.println("Esti in starea " + q0);
+		}
+		if (stare == 2 && l == 'b') {
+			q0 = 3;
+			raspunsFinal = true;
+			System.out.println("Esti in starea " + q0 + " adica finala");
+		}
+	}
+
+	public static void apartine(boolean apartine) {
+		if (apartine == true) {
+			System.out.println("Apartine limbajului dat");
+		}
+		if (apartine == false) {
+			System.out.println("Nu apartine limbajului dat");
 		}
 	}
 }
