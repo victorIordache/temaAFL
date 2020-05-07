@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class AFL {
-	static int q0 = 0, q1;
+	static int q0 = 0, apartineAlfabet;
 	static boolean raspunsFinal = false;
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Esti in faza " + q0);
 		String verify = "";
 		String cuvant = verifyAlphabet(verify);
-		if (q1 == 1) {
-			for (int i = 0; i <= cuvant.length() - 1; i++) {
-				transition(q0, cuvant.charAt(i));
+		if (apartineAlfabet == 1) { // variabila apartineAlfabet este calculata la linia 41
+			for (int i = 0; i <= cuvant.length() - 1; i++) { // aplic functia transition pentru fiecare litera a
+																// cuvantului
+				transition(q0, cuvant.charAt(i)); // transition modifica totodata boolean-ul raspunFinal
 			}
 		}
 		apartine(raspunsFinal);
@@ -28,7 +29,7 @@ public class AFL {
 		cuvant = input.next();
 		input.close();
 		for (int i = 0; i <= cuvant.length() - 1; i++) {
-			char verifyString = cuvant.charAt(i);
+			char verifyString = cuvant.charAt(i); // aleg fiecare litera in parte din cuvant
 			if (verifyString >= 'a' && verifyString <= 'b') { // daca cuvantul contine doar a sau b corect ramane true
 				corect = true;
 			} else {
@@ -38,7 +39,7 @@ public class AFL {
 		}
 		if (corect == true) {
 			System.out.println(aprobat);
-			q1 = q0 + 1;
+			apartineAlfabet = q0 + 1;
 		} else {
 			System.out.println(eroare);
 			System.out.println("Ai ramas in faza 0");
@@ -74,7 +75,7 @@ public class AFL {
 		}
 	}
 
-	public static void apartine(boolean apartine) {
+	public static void apartine(boolean apartine) { // raspunsul final
 		if (apartine == true) {
 			System.out.println("Apartine limbajului dat");
 		}
